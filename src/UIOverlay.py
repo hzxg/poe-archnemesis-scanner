@@ -53,9 +53,9 @@ class UIOverlay:
         return w
 
     def _hotkey_pressed(self) -> None:
-        if self._scan_label_text.get() == 'Scan':
+        if self._scan_label_text.get() == '扫描':
             self._scan(None)
-        elif self._scan_label_text.get() == 'Hide':
+        elif self._scan_label_text.get() == '隐藏':
             self._hide(None)
 
     def _create_controls(self) -> None:
@@ -64,12 +64,12 @@ class UIOverlay:
         l.bind('<B3-Motion>', lambda event: self._drag(self._root, -5, -5, event))
         l.grid(row=0, column=0)
 
-        settings = tk.Button(self._root, text='Settings', fg=COLOR_FG_GREEN, bg=COLOR_BG, font=FONT_SMALL)
+        settings = tk.Button(self._root, text='设置', fg=COLOR_FG_GREEN, bg=COLOR_BG, font=FONT_SMALL)
         settings.bind('<Button-1>', lambda _: self._settings.show())
         settings.bind('<B3-Motion>', lambda event: self._drag(self._root, -5, -5, event))
         settings.grid(row=0, column=1)
 
-        self._scan_label_text = tk.StringVar(self._root, value='Scan')
+        self._scan_label_text = tk.StringVar(self._root, value='扫描')
         self._scan_label = tk.Button(self._root, textvariable=self._scan_label_text, fg=COLOR_FG_GREEN, bg=COLOR_BG, font=FONT_SMALL)
         self._scan_label.bind("<Button-1>", self._scan)
         self._scan_label.bind('<B3-Motion>', lambda event: self._drag(self._root, -5, -5, event))
@@ -82,7 +82,7 @@ class UIOverlay:
         return (x, y)
 
     def _scan(self, _) -> None:
-        self._scan_label_text.set('Scanning...')
+        self._scan_label_text.set('扫描中...')
         self._root.update()
         results = self._image_scanner.scan()
 
@@ -107,12 +107,12 @@ class UIOverlay:
                 trash_inventory = self._recipe_shopper.get_trash_inventory(desired_items, results)
                 trash_recipe_items = [None] * min(4, len(trash_inventory.keys()))
                 trash_recipe_items = [trash_inventory[list(trash_inventory.keys())[i]][0] for i,x in enumerate(trash_recipe_items)]
-                trash_recipe = ('Trash', trash_recipe_items, False, True)
+                trash_recipe = ('不需要', trash_recipe_items, False, True)
                 recipes.append(trash_recipe)
 
             self._show_scan_results(results, recipes)
 
-            self._scan_label_text.set('Hide')
+            self._scan_label_text.set('隐藏')
             self._scan_label.bind('<Button-1>', self._hide)
         else:
             self._hide(None)
@@ -125,7 +125,7 @@ class UIOverlay:
         if self._tooltip_window is not None:
             self._tooltip_window.destroy()
         self._clear_highlights(None)
-        self._scan_label_text.set('Scan')
+        self._scan_label_text.set('扫描')
         self._scan_label.bind('<Button-1>', self._scan)
 
     def _show_scan_results(self, results: Dict[str, List[Tuple[int, int]]], recipes: List[Tuple[str, List[Tuple[int, int]], bool, bool]]) -> None:
@@ -225,7 +225,7 @@ class UIOverlay:
         # Show parents on row 0
         parents = [RecipeItemNode(p, []) for p in self._items_map.get_parent_recipes_for(item)]
         if len(parents) > 0:
-            tk.Label(self._recipe_browser_window, text='Used in:', bg=COLOR_BG, fg=COLOR_FG_GREEN, font=FONT_BIG).grid(row=0, column=0)
+            tk.Label(self._recipe_browser_window, text='用于:', bg=COLOR_BG, fg=COLOR_FG_GREEN, font=FONT_BIG).grid(row=0, column=0)
             for column, p in enumerate(parents):
                 # Reuse the same function for convenience
                 draw_tree(p, 0, column + 1)
@@ -323,51 +323,51 @@ class Settings:
         v = tk.DoubleVar(self._window, value=self._items_map.scale)
         self._scale_entry = tk.Entry(self._window, textvariable=v)
         self._scale_entry.grid(row=1, column=0)
-        tk.Button(self._window, text='Set image scale', command=self._update_scale).grid(row=1, column=1)
+        tk.Button(self._window, text='设定图片比例', command=self._update_scale).grid(row=1, column=1)
 
         v = tk.DoubleVar(self._window, value=self._image_scanner.confidence_threshold)
         self._confidence_threshold_entry = tk.Entry(self._window, textvariable=v)
         self._confidence_threshold_entry.grid(row=2, column=0)
-        tk.Button(self._window, text='Set confidence threshold', command=self._update_confidence_threshold).grid(row=2, column=1)
+        tk.Button(self._window, text='设置置信度阈值', command=self._update_confidence_threshold).grid(row=2, column=1)
 
         v = tk.StringVar(self._window, value=self._scan_hotkey)
         self._scan_hotkey_entry = tk.Entry(self._window, textvariable=v)
         self._scan_hotkey_entry.grid(row=3, column=0)
-        tk.Button(self._window, text='Set scan/hide hotkey', command=self._update_scan_hotkey).grid(row=3, column=1)
+        tk.Button(self._window, text='设置 扫描/隐藏 快捷键', command=self._update_scan_hotkey).grid(row=3, column=1)
 
-        c = tk.Checkbutton(self._window, text='Display inventory items', command=self._update_display_inventory_items)
+        c = tk.Checkbutton(self._window, text='显示库存', command=self._update_display_inventory_items)
         c.grid(row=4, column=0, columnspan=2)
         if self._display_inventory_items:
             c.select()
 
-        c = tk.Checkbutton(self._window, text='Display unavailable recipes', command=self._update_display_unavailable_recipes)
+        c = tk.Checkbutton(self._window, text='显示不可用的配方', command=self._update_display_unavailable_recipes)
         c.grid(row=5, column=0, columnspan=2)
         if self._display_unavailable_recipes:
             c.select()
 
-        c = tk.Checkbutton(self._window, text='Copy recipe to clipboard', command=self._update_copy_recipe_to_clipboard)
+        c = tk.Checkbutton(self._window, text='复制到剪切板', command=self._update_copy_recipe_to_clipboard)
         c.grid(row=6, column=0, columnspan=2)
         if self._copy_recipe_to_clipboard:
             c.select()
 
-        c = tk.Checkbutton(self._window, text='Run as overlay', command=self._update_run_as_overlay)
+        c = tk.Checkbutton(self._window, text='作为覆盖运行', command=self._update_run_as_overlay)
         c.grid(row=7, column=0, columnspan=2)
         if self._run_as_overlay:
             c.select()
 
-        c = tk.Checkbutton(self._window, text='Shopping List Mode', command=self._update_shopping_list_mode)
+        c = tk.Checkbutton(self._window, text='清单模式', command=self._update_shopping_list_mode)
         c.grid(row=8, column=0, columnspan=2)
         if self._shopping_list_mode:
             c.select()
 
         self._shopping_list_label = tk.StringVar()
-        self._shopping_list_label.set("Enter a comma separated list of items")
+        self._shopping_list_label.set("输入以逗号分隔的项目列表")
         c = tk.Label(self._window, textvariable=self._shopping_list_label).grid(row=9, column=0, columnspan=2)
 
         v = tk.StringVar(self._window, value=self._shopping_list)
         self._shopping_list_entry = tk.Entry(self._window, textvariable=v)
         self._shopping_list_entry.grid(row=10, column=0)
-        tk.Button(self._window, text='Set shopping list', command=self._update_shopping_list).grid(row=10, column=1)
+        tk.Button(self._window, text='设定清单', command=self._update_shopping_list).grid(row=10, column=1)
 
     def _close(self) -> None:
         if self._window is not None:
@@ -433,7 +433,7 @@ class Settings:
                 keyboard.add_hotkey(self._scan_hotkey, self._on_scan_hotkey)
             except ValueError:
                 # TODO: show the error in the ui
-                print('Invalid scan hotkey!')
+                print('无效快捷键')
 
     def _update_run_as_overlay(self) -> None:
         self._run_as_overlay = not self._run_as_overlay
@@ -446,13 +446,13 @@ class Settings:
     def _update_shopping_list(self) -> None:
         shopping_list = list(map(lambda x: x.strip(), self._shopping_list_entry.get().split(",")))
         if len(shopping_list) == 0 or len(self._shopping_list_entry.get().strip()) == 0:
-            self._update_shopping_list_label("Error: Must enter at least one item")
+            self._update_shopping_list_label("错误:必须至少输入一项")
             return
         for item in shopping_list:
             if item not in self._items_map.items():
-                self._update_shopping_list_label('Error: unknown item "{0}"'.format(item))
+                self._update_shopping_list_label('错误: 未知物品 "{0}"'.format(item))
                 return
-        self._update_shopping_list_label("Shopping list updated!")
+        self._update_shopping_list_label("清单更新成功")
         self._shopping_list = ",".join(shopping_list)
         self._save_config()
 

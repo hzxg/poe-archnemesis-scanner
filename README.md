@@ -10,7 +10,7 @@ When you start the program three small buttons will pop up in the top left corne
 
 * '[X]' button just closes the program.
 * 'Settings' button open settings window (see below).
-* 'Scan' button does all the magic. Once you press it, the program will enter the scanning mode and the button will change to 'Scanning...'. It will scan your archnemesis inventory and will create a list of all possible recipes. After the scan completes, the button will change again to 'Hide'. Once you examine the scan result, click the 'Hide' button to hide them.
+* '扫描' button does all the magic. Once you press it, the program will enter the scanning mode and the button will change to 'Scanning...'. It will scan your archnemesis inventory and will create a list of all possible recipes. After the scan completes, the button will change again to 'Hide'. Once you examine the scan result, click the 'Hide' button to hide them.
 
 You could also hold the right mouse button to drag the controls around.
 
@@ -26,7 +26,7 @@ The setting window allows you to adjust some parameters to improve the searching
   
 * 'Set confidence threshold' button sets the threshold used by the search algorithm to filter the results. If the algorithm was able to find an area with confidence value higher than the confidence threshold then it will treat it as a match. The default value is 0.94 (or 94%) and should work in most of the cases.
 
-* 'Set scan/hide hotkey' button sets the keyboard hotkey for the 'Scan'/'Hide' button. It accepts a text that represents a hotkey and its modifiers. Examples: 'F11', 'ctrl+shift+s', 'space', 'comma', 'plus', etc.
+* 'Set scan/hide hotkey' button sets the keyboard hotkey for the '扫描'/'Hide' button. It accepts a text that represents a hotkey and its modifiers. Examples: 'F11', 'ctrl+shift+s', 'space', 'comma', 'plus', etc.
 
 * 'Display inventory items' checkbox turns additional display setting for scan window. The scan results will also include a list of all of your archnemesis items in the inventory.
 
